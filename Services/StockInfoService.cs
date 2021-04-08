@@ -23,28 +23,38 @@ namespace MyTwse.Services
         }
         public void GetStockInfoByRecent(string stockCode, int days)
         {
-            string url = "https://www.twse.com.tw/exchangeReport/BWIBBU_d?response=json&selectType=ALL";
+            days -= 1;
             DateTime now = DateTime.UtcNow.AddHours(8);
-            DateTime nowDate = now.Date;
-            
+
+            DateTime endDate = now.Date;
+            DateTime startDate = endDate.AddDays(-days);
+
+            CreateStockInfoData(startDate, endDate);
+        }
+
+        private void CreateStockInfoData(DateTime startDate, DateTime endDate)
+        {
+            DateTime now = DateTime.UtcNow.AddHours(8);
+            string url = "https://www.twse.com.tw/exchangeReport/BWIBBU_d?response=json&selectType=ALL";
+
             int insertDateLogsType = (int)InsertDateLogsTypeEnum.StockInfo;
             var insertDateLogDic =
                _InsertDateLogRepository
-               .GetListBy(e => e.Date >= nowDate.AddDays(-days) && e.Date <= nowDate && e.Type == insertDateLogsType)
+               .GetListBy(e => e.Date >= startDate && e.Date <= endDate && e.Type == insertDateLogsType)
                .ToDictionary(e => e.Date, e => e);
 
             List<InsertDateLog> insertDateLogs = new List<InsertDateLog>();
             List<StockInfo> stockInfos = new List<StockInfo>();
-            for (DateTime date = nowDate; date > nowDate.AddDays(-days); date = date.AddDays(-1))
+            for (DateTime date = startDate; date <= endDate; date = date.AddDays(1))
             {
-                if(insertDateLogDic.ContainsKey(date))
+                if (insertDateLogDic.ContainsKey(date))
                 {
                     continue;
                 }
                 //一個日期呼叫一次API
                 var result = RestRequestHelper.Request(url)
                     .Get(e => e
-                        .AddParameter("date", nowDate.ToString("yyyyMMdd"))
+                        .AddParameter("date", date.ToString("yyyyMMdd"))
                         ).Response<StockInfoJsonModel>();
 
                 //紀錄 API日期
@@ -54,7 +64,7 @@ namespace MyTwse.Services
                     Date = date,
                     CreateTime = now
                 });
-                
+
                 foreach (var item in result.Data)
                 {
                     /*["證券代號","證券名稱","殖利率(%)","股利年度","本益比","股價淨值比","財報年/季"]*/
@@ -73,6 +83,5 @@ namespace MyTwse.Services
             }
             _StockInfoRepository.Create(stockInfos, insertDateLogs);
         }
-
     }
 }
