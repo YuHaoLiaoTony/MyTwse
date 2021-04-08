@@ -13,6 +13,15 @@ namespace MyTwse.Extensions
             }
             return null;
         }
+        public static decimal? TryToDecimal(this string input)
+        {
+            decimal result = 0;
+            if (decimal.TryParse(input, out result))
+            {
+                return result;
+            }
+            return null;
+        }
         /// <summary>
         /// 
         /// </summary>

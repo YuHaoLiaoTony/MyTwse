@@ -13,7 +13,7 @@ namespace MyTwse.Repositories
         public List<T> GetListBy(Expression<Func<T, bool>> whereLambda);
         public T GetBy(Expression<Func<T, bool>> whereLambda);
         public int Delete(T model);
-        public List<T> GetPagedList<TKey>(int pageIndex, int pageSize, Expression<Func<T, bool>> whereLambda, Expression<Func<T, TKey>> orderBy);
+        public List<T> GetPagedListOrderBy<TKey>(int pageIndex, int pageSize, Expression<Func<T, bool>> whereLambda, Expression<Func<T, TKey>> orderBy);
     }
 
     public class BaseRepository<T> where T : class
@@ -52,10 +52,15 @@ namespace MyTwse.Repositories
             _DB.Set<T>().Remove(model); 
             return _DB.SaveChanges();
         }
-        public List<T> GetPagedList<TKey>(int pageIndex, int pageSize, Expression<Func<T, bool>> whereLambda, Expression<Func<T, TKey>> orderBy)
+        public List<T> GetPagedListOrderBy<TKey>(int pageIndex, int pageSize, Expression<Func<T, bool>> whereLambda, Expression<Func<T, TKey>> orderBy)
         {
             // 分页 一定注意： Skip 之前一定要 OrderBy 
             return _DB.Set<T>().Where(whereLambda).OrderBy(orderBy).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
+        }
+        public List<T> GetPagedListOrderByDescending<TKey>(int pageIndex, int pageSize, Expression<Func<T, bool>> whereLambda, Expression<Func<T, TKey>> orderBy)
+        {
+            // 分页 一定注意： Skip 之前一定要 OrderBy 
+            return _DB.Set<T>().Where(whereLambda).OrderByDescending(orderBy).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
         }
     }
 }

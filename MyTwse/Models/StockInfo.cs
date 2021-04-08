@@ -10,8 +10,8 @@ namespace MyTwse.Models
         public string Code { get; set; }
         public string YieldRate { get; set; }
         public int DividendYear { get; set; }
-        public string PE { get; set; }
-        public string PB { get; set; }
+        public decimal? PE { get; set; }
+        public decimal? PB { get; set; }
         public string FinancialReport { get; set; }
         public DateTime Date { get; set; }
     }

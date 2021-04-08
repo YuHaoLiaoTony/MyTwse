@@ -21,6 +21,21 @@ namespace MyTwse.Services
             _InsertDateLogRepository = insertDateLogRepository;
             _StockInfoRepository = stockInfoRepository;
         }
+        public List<StockInfo> GetStockPERank(DateTime date, int count)
+        {
+            CreateStockInfoData(date);
+            return _StockInfoRepository.GetPagedListOrderBy(1, count, e => e.Date == date.Date && e.PE.HasValue, e => e.PE);
+        }
+        public List<StockInfo> GetStockInfos()
+        {
+            DateTime now = DateTime.UtcNow.AddHours(8);
+            DateTime endDate = now.Date;
+            DateTime startDate = endDate.AddDays(-5);
+
+            CreateStockInfoData(startDate, endDate);
+
+            return _StockInfoRepository.GetPagedListOrderBy(1, 100, e => true, e => e.Date);
+        }
         public List<StockInfo> GetStockInfoByRecent(string stockCode, int days)
         {
             days -= 1;
@@ -33,7 +48,10 @@ namespace MyTwse.Services
 
             return _StockInfoRepository.GetListBy(e => e.Code == stockCode && e.Date >= startDate && e.Date <= endDate);
         }
-
+        private void CreateStockInfoData(DateTime date)
+        {
+            CreateStockInfoData(date, date);
+        }
         private void CreateStockInfoData(DateTime startDate, DateTime endDate)
         {
             DateTime now = DateTime.UtcNow.AddHours(8);
@@ -82,8 +100,8 @@ namespace MyTwse.Services
                         Name = item[1]?.ToString(),
                         YieldRate = item[2]?.ToString(),
                         DividendYear = (item[3]?.ToString()).TryToInt().GetValueOrDefault(),
-                        PE = item[4]?.ToString(),
-                        PB = item[5]?.ToString(),
+                        PE = item[4]?.ToString().TryToDecimal(),
+                        PB = item[5]?.ToString().TryToDecimal(),
                         FinancialReport = item[6]?.ToString(),
                         Date = date
                     });
