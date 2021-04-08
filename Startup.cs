@@ -1,16 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using MyTwse.IRepositories;
+using MyTwse.Repositories;
+using MyTwse.ServiceInterface;
 using MyTwse.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MyTwse
 {
@@ -26,7 +22,14 @@ namespace MyTwse
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Service
             services.AddScoped<IStockInfoService, StockInfoService>();
+
+            //Repository
+            services.AddScoped<IInsertDateLogRepository, InsertDateLogRepository>();
+            services.AddScoped<IStockInfoRepository, StockInfoRepository>();
+            
+                
             services.AddControllers();
         }
 

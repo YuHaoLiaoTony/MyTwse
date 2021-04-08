@@ -1,9 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyTwse.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using MyTwse.ServiceInterface;
 
 namespace MyTwse.Controllers
 {
@@ -20,5 +16,6 @@ namespace MyTwse.Controllers
         {
             _StockInfoService.GetStockInfoByRecent("", 5);
         }
+
     }
 }
