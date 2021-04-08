@@ -21,7 +21,7 @@ namespace MyTwse.Services
             _InsertDateLogRepository = insertDateLogRepository;
             _StockInfoRepository = stockInfoRepository;
         }
-        public void GetStockInfoByRecent(string stockCode, int days)
+        public List<StockInfo> GetStockInfoByRecent(string stockCode, int days)
         {
             days -= 1;
             DateTime now = DateTime.UtcNow.AddHours(8);
@@ -30,6 +30,8 @@ namespace MyTwse.Services
             DateTime startDate = endDate.AddDays(-days);
 
             CreateStockInfoData(startDate, endDate);
+
+            return _StockInfoRepository.GetListBy(e => e.Code == stockCode && e.Date >= startDate && e.Date <= endDate);
         }
 
         private void CreateStockInfoData(DateTime startDate, DateTime endDate)
@@ -64,6 +66,12 @@ namespace MyTwse.Services
                     Date = date,
                     CreateTime = now
                 });
+
+                //為 null 可能是假日或沒開市所以查無資料
+                if (result.Data == null)
+                {
+                    continue;
+                }
 
                 foreach (var item in result.Data)
                 {
