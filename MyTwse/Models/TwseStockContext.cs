@@ -52,13 +52,9 @@ namespace MyTwse.Models
                     .IsRequired()
                     .HasMaxLength(50);
 
-                entity.Property(e => e.PB)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                entity.Property(e => e.PB).HasColumnType("decimal(18, 2)");
 
-                entity.Property(e => e.PE)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                entity.Property(e => e.PE).HasColumnType("decimal(18, 2)");
 
                 entity.Property(e => e.YieldRate)
                     .IsRequired()
