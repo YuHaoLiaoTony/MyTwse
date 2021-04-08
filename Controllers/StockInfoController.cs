@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MyTwse.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +16,9 @@ namespace MyTwse.Controllers
         {
             _StockInfoService = stockInfoService;
         }
-        public IActionResult Index()
+        public void Index()
         {
-            _StockInfoService.GetStockInfoByRecent("", 1);
-            return View();
+            _StockInfoService.GetStockInfoByRecent("", 5);
         }
     }
 }
