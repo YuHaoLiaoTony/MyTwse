@@ -26,7 +26,13 @@ namespace MyTwse.Services
         {
             CreateStockInfoData(date);
 
-            return _StockInfoRepository.GetPagedListOrderBy(1, count, e => e.Date == date.Date && e.PE.HasValue, e => e.PE);
+            var result = _StockInfoRepository.GetPagedListOrderBy(1, count, e => e.Date == date.Date && e.PE.HasValue, e => e.PE);
+
+            if(result.Any() == false)
+            {
+                throw new MyTwseException(MyTwseExceptionEnum.NotFount,$"日期：{date.ToString("yyyy-MM-dd")}");
+            }
+            return result;
         }
         public List<StockInfo> GetStockInfos()
         {
