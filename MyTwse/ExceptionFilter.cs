@@ -35,6 +35,11 @@ namespace MyTwse
                 statusCode = myTwseException.ErrorCode.GetHttpStatusCode();
                 result.Code = myTwseException.ErrorCode;
                 result.Message = myTwseException.ErrorCode.GetDescription();
+                if (string.IsNullOrWhiteSpace(myTwseException.Message) == false)
+                {
+                    result.Message = $"{result.Message}：{myTwseException.Message}";
+                    result.Message += myTwseException.Message;
+                }
             }
 
             context.HttpContext.Response.StatusCode = (int)statusCode;

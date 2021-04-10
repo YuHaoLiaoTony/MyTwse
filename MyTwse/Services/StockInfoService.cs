@@ -22,8 +22,18 @@ namespace MyTwse.Services
             _InsertDateLogRepository = insertDateLogRepository;
             _StockInfoRepository = stockInfoRepository;
         }
+
         public List<StockInfo> GetStockPERank(DateTime date, int count)
         {
+            Task<bool> isHoliday = date.IsHoliday();
+
+            isHoliday.Wait();
+
+            if (isHoliday.Result)
+            {
+                throw new MyTwseException(MyTwseExceptionEnum.BadRequestIsHoliday, $"{date.ToString("yyyy-MM-dd")}");
+            }
+
             CreateStockInfoData(date);
 
             var result = _StockInfoRepository.GetPagedListOrderBy(1, count, e => e.Date == date.Date && e.PE.HasValue, e => e.PE);
@@ -46,6 +56,14 @@ namespace MyTwse.Services
         }
         public List<StockInfo> GetStockInfoByRecent(string stockCode, int days)
         {
+            if (days <= 0)
+            {
+                throw new MyTwseException(MyTwseExceptionEnum.BadRequest,$"{nameof(days)}必須大於等於 1");
+            }
+            if (stockCode.IsNumber() == false)
+            {
+                throw new MyTwseException(MyTwseExceptionEnum.BadRequestIsNotNumber);
+            }
             days -= 1;
             DateTime now = DateTime.UtcNow.AddHours(8);
 
@@ -55,20 +73,6 @@ namespace MyTwse.Services
             CreateStockInfoData(startDate, endDate);
 
             return _StockInfoRepository.GetListBy(e => e.Code == stockCode && e.Date >= startDate && e.Date <= endDate);
-        }
-        private int GetRandom(int min,int max)
-        {
-            Random random = new Random();//亂數種子
-            
-            return random.Next(min, max);//回傳0-99的亂數;
-        }
-        /// <summary>
-        /// 確認需求範圍是否有未取得的資料
-        /// </summary>
-        /// <param name="date"></param>
-        private void CreateStockInfoData(DateTime date)
-        {
-            CreateStockInfoData(date, date);
         }
         /// <summary>
         /// 確認需求範圍是否有未取得的資料
@@ -148,6 +152,20 @@ namespace MyTwse.Services
                 _StockInfoRepository.Create(stockInfos, insertDateLogs);
             }
            
+        }
+        private int GetRandom(int min, int max)
+        {
+            Random random = new Random();//亂數種子
+
+            return random.Next(min, max);//回傳0-99的亂數;
+        }
+        /// <summary>
+        /// 確認需求範圍是否有未取得的資料
+        /// </summary>
+        /// <param name="date"></param>
+        private void CreateStockInfoData(DateTime date)
+        {
+            CreateStockInfoData(date, date);
         }
     }
 }
