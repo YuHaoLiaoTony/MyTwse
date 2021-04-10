@@ -36,7 +36,10 @@ namespace MyTwse.Repositories
         public BaseRepository(DbContext context) : base(context)
         {
         }
-
+        public List<T> GetListBy(Expression<Func<T, bool>> whereLambda)
+        {
+            return _DB.Set<T>().Where(whereLambda).ToList();
+        }
         /// <summary>
         /// 根据条件查询
         /// </summary>

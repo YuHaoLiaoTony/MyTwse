@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyTwse.Models;
+using MyTwse.Models.ViewModels;
 using MyTwse.ServiceInterface;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace MyTwse.Controllers
 {
@@ -30,6 +32,12 @@ namespace MyTwse.Controllers
         {
             return _StockInfoService.GetStockPERank(date, count);
         }
-
+        [HttpPost]
+        [Route("StockInfo")]
+        public void CreateStockInfoData(CreateStockViewModel model)
+        {
+            _StockInfoService.CreateStockInfoData(model.StartDate.Value, model.EndDate.Value);
+        }
     }
+
 }

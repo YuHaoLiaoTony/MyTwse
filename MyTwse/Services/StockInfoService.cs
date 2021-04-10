@@ -69,7 +69,7 @@ namespace MyTwse.Services
         /// </summary>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
-        private void CreateStockInfoData(DateTime startDate, DateTime endDate)
+        public void CreateStockInfoData(DateTime startDate, DateTime endDate)
         {
             DateTime now = DateTime.UtcNow.AddHours(8);
             string url = "https://www.twse.com.tw/exchangeReport/BWIBBU_d?response=json&selectType=ALL";
@@ -96,7 +96,8 @@ namespace MyTwse.Services
                     result = RestRequestHelper.Request(url)
                     .Get(e => e
                         .AddParameter("date", date.ToString("yyyyMMdd"))
-                        ).Response<StockInfoJsonModel>();
+                        )
+                    .Response<StockInfoJsonModel>();
 
                     //API 一直打會被鎖,故隨機延遲300~500毫秒
                     Task.Delay(GetRandom(300, 500)).Wait();
