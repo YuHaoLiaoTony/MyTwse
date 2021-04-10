@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Unicode;
 
 namespace MyTwse.Extensions
 {
@@ -41,6 +43,14 @@ namespace MyTwse.Extensions
             };
 
             return JsonSerializer.Deserialize<T>(jsonText, options);
+        }
+        public static string ToJson<T>(this T model)
+        {
+            var options = new JsonSerializerOptions
+            {
+                Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
+            };
+            return JsonSerializer.Serialize(model, options);
         }
     }
 }
