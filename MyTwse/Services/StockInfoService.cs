@@ -9,6 +9,7 @@ using MyTwse.ServiceInterface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MyTwse.Services
 {
@@ -24,6 +25,7 @@ namespace MyTwse.Services
         public List<StockInfo> GetStockPERank(DateTime date, int count)
         {
             CreateStockInfoData(date);
+
             return _StockInfoRepository.GetPagedListOrderBy(1, count, e => e.Date == date.Date && e.PE.HasValue, e => e.PE);
         }
         public List<StockInfo> GetStockInfos()
@@ -48,10 +50,25 @@ namespace MyTwse.Services
 
             return _StockInfoRepository.GetListBy(e => e.Code == stockCode && e.Date >= startDate && e.Date <= endDate);
         }
+        private int GetRandom(int min,int max)
+        {
+            Random random = new Random();//亂數種子
+            
+            return random.Next(min, max);//回傳0-99的亂數;
+        }
+        /// <summary>
+        /// 確認需求範圍是否有未取得的資料
+        /// </summary>
+        /// <param name="date"></param>
         private void CreateStockInfoData(DateTime date)
         {
             CreateStockInfoData(date, date);
         }
+        /// <summary>
+        /// 確認需求範圍是否有未取得的資料
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
         private void CreateStockInfoData(DateTime startDate, DateTime endDate)
         {
             DateTime now = DateTime.UtcNow.AddHours(8);
@@ -62,21 +79,38 @@ namespace MyTwse.Services
                _InsertDateLogRepository
                .GetListBy(e => e.Date >= startDate && e.Date <= endDate && e.Type == insertDateLogsType)
                .ToDictionary(e => e.Date, e => e);
-
-            List<InsertDateLog> insertDateLogs = new List<InsertDateLog>();
-            List<StockInfo> stockInfos = new List<StockInfo>();
+                        
             for (DateTime date = startDate; date <= endDate; date = date.AddDays(1))
             {
+                List<StockInfo> stockInfos = new List<StockInfo>();
+                List<InsertDateLog> insertDateLogs = new List<InsertDateLog>();
                 if (insertDateLogDic.ContainsKey(date))
                 {
                     continue;
                 }
                 //一個日期呼叫一次API
-                var result = RestRequestHelper.Request(url)
+                StockInfoJsonModel result = null;
+
+                try
+                {
+                    result = RestRequestHelper.Request(url)
                     .Get(e => e
                         .AddParameter("date", date.ToString("yyyyMMdd"))
                         ).Response<StockInfoJsonModel>();
 
+                    //API 一直打會被鎖,故隨機延遲300~500毫秒
+                    Task.Delay(GetRandom(300, 500)).Wait();
+                }
+                catch(Exception ex)
+                {
+                    //錯誤就跳出迴圈
+                    break;
+                }
+                if (result == null)
+                {
+                    //錯誤就跳出迴圈,不紀錄該日期已經取得資料
+                    continue;
+                }
                 //紀錄 API日期
                 insertDateLogs.Add(new InsertDateLog
                 {
@@ -84,30 +118,29 @@ namespace MyTwse.Services
                     Date = date,
                     CreateTime = now
                 });
-
                 //為 null 可能是假日或沒開市所以查無資料
-                if (result.Data == null)
+                if (result.Data != null)
                 {
-                    continue;
-                }
-
-                foreach (var item in result.Data)
-                {
-                    /*["證券代號","證券名稱","殖利率(%)","股利年度","本益比","股價淨值比","財報年/季"]*/
-                    stockInfos.Add(new StockInfo
+                    foreach (var item in result.Data)
                     {
-                        Code = item[0]?.ToString(),
-                        Name = item[1]?.ToString(),
-                        YieldRate = item[2]?.ToString(),
-                        DividendYear = (item[3]?.ToString()).TryToInt().GetValueOrDefault(),
-                        PE = item[4]?.ToString().TryToDecimal(),
-                        PB = item[5]?.ToString().TryToDecimal(),
-                        FinancialReport = item[6]?.ToString(),
-                        Date = date
-                    });
+                        /*["證券代號","證券名稱","殖利率(%)","股利年度","本益比","股價淨值比","財報年/季"]*/
+                        stockInfos.Add(new StockInfo
+                        {
+                            Code = item[0]?.ToString(),
+                            Name = item[1]?.ToString(),
+                            YieldRate = item[2]?.ToString(),
+                            DividendYear = (item[3]?.ToString()).TryToInt().GetValueOrDefault(),
+                            PE = item[4]?.ToString().TryToDecimal(),
+                            PB = item[5]?.ToString().TryToDecimal(),
+                            FinancialReport = item[6]?.ToString(),
+                            Date = date
+                        });
+                    }
                 }
+                
+                _StockInfoRepository.Create(stockInfos, insertDateLogs);
             }
-            _StockInfoRepository.Create(stockInfos, insertDateLogs);
+           
         }
     }
 }
