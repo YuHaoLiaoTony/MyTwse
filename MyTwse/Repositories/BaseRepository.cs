@@ -15,22 +15,36 @@ namespace MyTwse.Repositories
         public int Delete(T model);
         public List<T> GetPagedListOrderBy<TKey>(int pageIndex, int pageSize, Expression<Func<T, bool>> whereLambda, Expression<Func<T, TKey>> orderBy);
     }
-
-    public class BaseRepository<T> where T : class
+    public class BaseRepository
     {
         protected DbContext _DB = null;
         public BaseRepository(DbContext context)
         {
             _DB = context;
         }
+        protected List<T> GetListBySql<T>(string sql,params object[] parameters) where T : class
+        {
+            return _DB.Set<T>().FromSqlRaw(sql, parameters).ToList();
+        }
+        protected T GetBySql<T>(string sql, params object[] parameters) where T : class
+        {
+            return _DB.Set<T>().FromSqlRaw(sql, parameters).FirstOrDefault();
+        }
+    }
+    public class BaseRepository<T> : BaseRepository where T : class
+    {
+        public BaseRepository(DbContext context) : base(context)
+        {
+        }
+
         /// <summary>
         /// 根据条件查询
         /// </summary>
         /// <param name="whereLambda"></param>
         /// <returns></returns>
-        public List<T> GetListBy(Expression<Func<T, bool>> whereLambda)
+        public List<T> GetListBySQL(string sql,object[] parameters)
         {
-            return _DB.Set<T>().Where(whereLambda).ToList();
+            return _DB.Set<T>().FromSqlRaw<T>(sql, parameters).ToList();
         }
         public T GetBy(Expression<Func<T, bool>> whereLambda)
         {
