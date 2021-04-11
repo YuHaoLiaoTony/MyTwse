@@ -12,7 +12,7 @@
 
 1. Data 為 Array
 
-```
+```json
 {
     "Data": [
         {
