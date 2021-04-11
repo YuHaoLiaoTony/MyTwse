@@ -1,3 +1,4 @@
+using System.Net.Mime;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -32,9 +33,18 @@ namespace MyTwse
             //Repository
             services.AddScoped<IInsertDateLogRepository, InsertDateLogRepository>();
             services.AddScoped<IStockInfoRepository, StockInfoRepository>();
-            
-                
-            services.AddControllers();
+
+            services.AddControllers().ConfigureApiBehaviorOptions(options =>
+            {
+                options.InvalidModelStateResponseFactory = context =>
+                {
+                    var result = new BadRequestObjectResult(context.ModelState);
+
+                    result.ContentTypes.Add(MediaTypeNames.Application.Json);
+
+                    return result;
+                };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

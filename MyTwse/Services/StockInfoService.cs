@@ -85,7 +85,7 @@ namespace MyTwse.Services
             {
                 throw new MyTwseException(MyTwseExceptionEnum.BadRequest, "開始時間不得大於結束時間");
             }
-            CreateStockInfoData(queryModel.StartDate, queryModel.EndDate);
+            CreateStockInfoData(queryModel.StartDate.Value, queryModel.EndDate.Value);
             return _StockInfoRepository.GetYieldRateIncreaseＭaxDays(queryModel);
         }
         /// <summary>

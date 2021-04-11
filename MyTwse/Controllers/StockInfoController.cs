@@ -6,7 +6,6 @@ using MyTwse.Models.ViewModels;
 using MyTwse.ServiceInterface;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace MyTwse.Controllers
 {

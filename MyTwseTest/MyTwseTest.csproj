@@ -16,4 +16,11 @@
   <ItemGroup>
     <ProjectReference Include="..\MyTwse\MyTwse.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="GetYieldRateIncreaseＭaxDays.cs">
+      <ExcludeFromSourceAnalysis>True</ExcludeFromSourceAnalysis>
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+  </ItemGroup>
 </Project>

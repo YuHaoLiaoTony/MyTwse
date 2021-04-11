@@ -14,7 +14,11 @@ namespace MyTwse.Repositories
 {
     public class StockInfoRepository : BaseTwseStockRepository<StockInfo>, IStockInfoRepository
     {
-        public List<YieldRateIncreaseＭaxDaysReportModel> GetYieldRateIncreaseＭaxDays(YieldRateIncreaseＭaxDaysQueryModel queryModel)
+		public StockInfoRepository(TwseStockContext context) : base(context)
+		{
+
+        }
+		public List<YieldRateIncreaseＭaxDaysReportModel> GetYieldRateIncreaseＭaxDays(YieldRateIncreaseＭaxDaysQueryModel queryModel)
         {
             string sql = @"
 
