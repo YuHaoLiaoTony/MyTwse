@@ -133,7 +133,7 @@ namespace MyTwse.Services
                 }
                 if (result == null)
                 {
-                    //錯誤就跳出迴圈,不紀錄該日期已經取得資料
+                    //不紀錄該日期已經取得資料
                     continue;
                 }
                 //紀錄 API日期

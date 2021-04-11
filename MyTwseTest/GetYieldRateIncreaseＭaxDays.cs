@@ -1,4 +1,12 @@
 ﻿using System;
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MyTwse;
+using MyTwse.Models.QueryModels;
+using MyTwse.ServiceInterface;
+
 namespace MyTwseTest
 {
 
