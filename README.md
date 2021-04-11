@@ -2,14 +2,14 @@
 - 這是一個從證交所取得股票資訊的API
 - 資料來源 [個股日本益比、殖利率及股價淨值比](https://www.twse.com.tw/zh/page/trading/exchange/BWIBBU_d.html)
 
-# 取得前 100筆股票資料
+## 取得前 100筆股票資料
 - 若資料庫沒有任何資料會呼叫證交所的API取得近５日資料
 - 主要用來測試使用
 ```http
 GET /StockInfo
 ```
 
-## Responses
+### Responses
 ```json
 [
   {
