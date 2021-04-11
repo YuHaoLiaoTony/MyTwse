@@ -1,4 +1,6 @@
-﻿namespace MyTwse
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+
+namespace MyTwse
 {
     public class MyTwseException : System.Exception
     {
@@ -30,6 +32,11 @@
             this.ErrorCode = errorCode;
             this.ExceptionDetail = detail;
         }
-
+        public MyTwseException(MyTwseExceptionEnum errorCode, ModelStateDictionary modelState)
+        {
+            this.ErrorCode = errorCode;
+            this.ExceptionDetail = modelState;
+        }
+        
     }
 }

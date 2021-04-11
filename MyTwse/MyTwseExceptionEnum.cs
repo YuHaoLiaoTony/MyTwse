@@ -5,6 +5,9 @@ namespace MyTwse
 {
     public enum MyTwseExceptionEnum
     {
+        [HttpStatusCode(HttpStatusCode.OK)]
+        [Description("成功")]
+        OK = 200,
         [HttpStatusCode(HttpStatusCode.NotFound)]
         [Description("查無資料")]
         NotFount = 404,
@@ -20,5 +23,8 @@ namespace MyTwse
         [HttpStatusCode(HttpStatusCode.BadRequest)]
         [Description("輸入值只能是數字")]
         BadRequestIsNotNumber = 400002,
+        [HttpStatusCode(HttpStatusCode.BadRequest)]
+        [Description("驗證錯誤")]
+        InvalidRequestParameterByModelState = 400003,
     }
 }

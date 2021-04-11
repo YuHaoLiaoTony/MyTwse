@@ -1,7 +1,9 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MyTwse.Extensions;
 
 namespace MyTwse
@@ -34,14 +36,25 @@ namespace MyTwse
             {
                 statusCode = myTwseException.ErrorCode.GetHttpStatusCode();
                 result.Code = myTwseException.ErrorCode;
-                result.Message = myTwseException.ErrorCode.GetDescription();
-                if (string.IsNullOrWhiteSpace(myTwseException.Message) == false)
+
+                if (myTwseException.ExceptionDetail is ModelStateDictionary)
                 {
-                    result.Message = $"{result.Message}：{myTwseException.Message}";
-                    result.Message += myTwseException.Message;
+                    var errors = ((ModelStateDictionary)myTwseException.ExceptionDetail)
+                        .Values.SelectMany(e => e.Errors)
+                        .Select(e => e.ErrorMessage);
+
+                    result.Message = string.Join("|", errors);
+                }
+                else
+                {
+                    result.Message = myTwseException.ErrorCode.GetDescription();
+                    if (string.IsNullOrWhiteSpace(myTwseException.Message) == false)
+                    {
+                        result.Message = $"{result.Message}：{myTwseException.ExceptionDetail}";
+                    }
                 }
             }
-
+            context.HttpContext.Response.Headers.Add("Content-Type", "application/json");
             context.HttpContext.Response.StatusCode = (int)statusCode;
             context.HttpContext.Response.WriteAsync(result.ToJson());
             return Task.CompletedTask;

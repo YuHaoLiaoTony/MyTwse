@@ -1,13 +1,16 @@
-using System.Net.Mime;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MyTwse.Filters;
 using MyTwse.IRepositories;
 using MyTwse.Repositories;
 using MyTwse.ServiceInterface;
 using MyTwse.Services;
+using System.Net.Mime;
 
 namespace MyTwse
 {
@@ -26,13 +29,17 @@ namespace MyTwse
             services.AddMvc(config =>
             {
                 config.Filters.Add(new ExceptionFilter());
+                config.Filters.Add(new ActionFilter());
             });
+
             //Service
             services.AddScoped<IStockInfoService, StockInfoService>();
 
             //Repository
             services.AddScoped<IInsertDateLogRepository, InsertDateLogRepository>();
             services.AddScoped<IStockInfoRepository, StockInfoRepository>();
+
+           
 
             services.AddControllers().ConfigureApiBehaviorOptions(options =>
             {

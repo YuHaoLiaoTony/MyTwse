@@ -9,7 +9,6 @@ using System.Collections.Generic;
 
 namespace MyTwse.Controllers
 {
-    [ApiController]
     public class StockInfoController : Controller
     {
         IStockInfoService _StockInfoService { get; set; }
@@ -50,14 +49,26 @@ namespace MyTwse.Controllers
         /// <param name="model"></param>
         [HttpPost]
         [Route("StockInfo")]
-        public void CreateStockInfoData(CreateStockViewModel model)
-        { 
+        public ResultModel CreateStockInfoData([FromBody]CreateStockViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                throw new MyTwseException(MyTwseExceptionEnum.InvalidRequestParameterByModelState, ModelState);
+            }
             _StockInfoService.CreateStockInfoData(model.StartDate.Value, model.EndDate.Value);
+            return new ResultModel
+            {
+                IsSuccess = true
+            };
         }
         [HttpGet]
         [Route("StockInfo/YieldRateIncreaseＭaxDays")]
         public List<YieldRateIncreaseＭaxDaysReportModel> GetYieldRateIncreaseＭaxDays([FromQuery]YieldRateIncreaseＭaxDaysQueryModel queryModel)
         {
+            if (!ModelState.IsValid)
+            {
+                throw new MyTwseException(MyTwseExceptionEnum.InvalidRequestParameterByModelState, ModelState);
+            }
             return _StockInfoService.GetYieldRateIncreaseＭaxDays(queryModel);
         }
     }
