@@ -1,4 +1,19 @@
-[TOC]
+<!-- TOC -->
+
+- [TwseAPI](#twseapi)
+    - [API通用格式](#api%E9%80%9A%E7%94%A8%E6%A0%BC%E5%BC%8F)
+    - [取得前 100筆股票資料](#%E5%8F%96%E5%BE%97%E5%89%8D-100%E7%AD%86%E8%82%A1%E7%A5%A8%E8%B3%87%E6%96%99)
+        - [Responses](#responses)
+    - [依照證券代號 搜尋最近n天的資料](#%E4%BE%9D%E7%85%A7%E8%AD%89%E5%88%B8%E4%BB%A3%E8%99%9F-%E6%90%9C%E5%B0%8B%E6%9C%80%E8%BF%91n%E5%A4%A9%E7%9A%84%E8%B3%87%E6%96%99)
+        - [Responses](#responses)
+    - [顯示指定日期本益比前n名](#%E9%A1%AF%E7%A4%BA%E6%8C%87%E5%AE%9A%E6%97%A5%E6%9C%9F%E6%9C%AC%E7%9B%8A%E6%AF%94%E5%89%8Dn%E5%90%8D)
+        - [Responses](#responses)
+    - [殖利率嚴格遞增的最長天數](#%E6%AE%96%E5%88%A9%E7%8E%87%E5%9A%B4%E6%A0%BC%E9%81%9E%E5%A2%9E%E7%9A%84%E6%9C%80%E9%95%B7%E5%A4%A9%E6%95%B8)
+    - [新增個股資訊](#%E6%96%B0%E5%A2%9E%E5%80%8B%E8%82%A1%E8%B3%87%E8%A8%8A)
+        - [Request](#request)
+        - [Responses](#responses)
+
+<!-- /TOC -->
 
 # TwseAPI
 
@@ -199,7 +214,7 @@
             "Days": 5
         }
     ],
-    "Code": 200,
+    "Code": 200,z
     "Message": ""
 }
 ```
