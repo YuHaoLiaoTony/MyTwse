@@ -1,4 +1,4 @@
-﻿namespace MyTwse.Models.ReportModel
+﻿namespace MyTwse.Models.ReportModels
 {
     public class StockInfoJsonModel
     {

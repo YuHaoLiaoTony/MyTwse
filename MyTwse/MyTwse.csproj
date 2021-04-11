@@ -18,5 +18,6 @@
 
   <ItemGroup>
     <Folder Include="Models\ViewModels\" />
+    <Folder Include="Models\QueryModels\" />
   </ItemGroup>
 </Project>

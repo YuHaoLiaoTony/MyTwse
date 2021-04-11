@@ -56,9 +56,7 @@ namespace MyTwse.Models
 
                 entity.Property(e => e.PE).HasColumnType("decimal(18, 2)");
 
-                entity.Property(e => e.YieldRate)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                entity.Property(e => e.YieldRate).HasColumnType("decimal(18, 2)");
             });
 
             OnModelCreatingPartial(modelBuilder);

@@ -1,15 +1,15 @@
-﻿using MyTwse.Enum;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using MyTwse.Enum;
 using MyTwse.Extensions;
 using MyTwse.Helpers;
 using MyTwse.IRepositories;
 using MyTwse.Models;
-using MyTwse.Models.ReportModel;
-using MyTwse.Repositories;
+using MyTwse.Models.QueryModels;
+using MyTwse.Models.ReportModels;
 using MyTwse.ServiceInterface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MyTwse.Services
 {
@@ -73,6 +73,16 @@ namespace MyTwse.Services
             CreateStockInfoData(startDate, endDate);
 
             return _StockInfoRepository.GetListBy(e => e.Code == stockCode && e.Date >= startDate && e.Date <= endDate);
+        }
+        /// <summary>
+        /// 取得股票殖利率提升連續最大天數
+        /// </summary>
+        /// <param name="queryModel"></param>
+        /// <returns></returns>
+        public List<YieldRateIncreaseＭaxDaysReportModel> GetYieldRateIncreaseＭaxDays(YieldRateIncreaseＭaxDaysQueryModel queryModel)
+        {
+            CreateStockInfoData(queryModel.StartDate, queryModel.EndDate);
+            return _StockInfoRepository.GetYieldRateIncreaseＭaxDays(queryModel);
         }
         /// <summary>
         /// 確認需求範圍是否有未取得的資料
@@ -139,7 +149,7 @@ namespace MyTwse.Services
                         {
                             Code = item[0]?.ToString(),
                             Name = item[1]?.ToString(),
-                            YieldRate = item[2]?.ToString(),
+                            YieldRate = item[2]?.ToString().TryToDecimal(),
                             DividendYear = (item[3]?.ToString()).TryToInt().GetValueOrDefault(),
                             PE = item[4]?.ToString().TryToDecimal(),
                             PB = item[5]?.ToString().TryToDecimal(),

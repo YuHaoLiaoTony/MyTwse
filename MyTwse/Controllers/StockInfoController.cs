@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyTwse.Models;
+using MyTwse.Models.QueryModels;
+using MyTwse.Models.ReportModels;
 using MyTwse.Models.ViewModels;
 using MyTwse.ServiceInterface;
 using System;
@@ -52,6 +54,12 @@ namespace MyTwse.Controllers
         public void CreateStockInfoData(CreateStockViewModel model)
         { 
             _StockInfoService.CreateStockInfoData(model.StartDate.Value, model.EndDate.Value);
+        }
+        [HttpGet]
+        [Route("StockInfo/YieldRateIncreaseＭaxDays")]
+        public List<YieldRateIncreaseＭaxDaysReportModel> GetYieldRateIncreaseＭaxDays([FromQuery]YieldRateIncreaseＭaxDaysQueryModel queryModel)
+        {
+            return _StockInfoService.GetYieldRateIncreaseＭaxDays(queryModel);
         }
     }
 

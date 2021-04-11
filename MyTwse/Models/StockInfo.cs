@@ -8,7 +8,7 @@ namespace MyTwse.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Code { get; set; }
-        public string YieldRate { get; set; }
+        public decimal? YieldRate { get; set; }
         public int DividendYear { get; set; }
         public decimal? PE { get; set; }
         public decimal? PB { get; set; }

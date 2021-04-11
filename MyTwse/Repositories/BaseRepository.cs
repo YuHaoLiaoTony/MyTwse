@@ -1,8 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace MyTwse.Repositories
 {
@@ -28,7 +31,59 @@ namespace MyTwse.Repositories
         }
         protected T GetBySql<T>(string sql, params object[] parameters) where T : class
         {
+            
             return _DB.Set<T>().FromSqlRaw(sql, parameters).FirstOrDefault();
+        }
+
+        protected List<T> ExecSQL<T>(string query, object parameters = null) where T : class
+        {
+            List<SqlParameter> paras = new List<SqlParameter>();
+            if (parameters != null)
+            {
+                foreach (var para in parameters.GetType().GetProperties())
+                {
+                    var value = para.GetValue(parameters);
+                    paras.Add(new SqlParameter($"@{para.Name}", value));
+                }
+            }
+            return ExecSQL<T>(query, paras);
+        }
+        public List<T> ExecSQL<T>(string query, List<SqlParameter> parameters = null)
+        {
+            using (var command = _DB.Database.GetDbConnection().CreateCommand())
+            {
+                command.CommandText = query;
+                command.CommandType = CommandType.Text;
+                if (parameters != null)
+                {
+                    foreach (var para in parameters)
+                    {
+                        command.Parameters.Add(para);
+                    }
+                }
+
+                _DB.Database.OpenConnection();
+
+                List<T> list = new List<T>();
+                using (var result = command.ExecuteReader())
+                {
+                    T obj = default(T);
+                    while (result.Read())
+                    {
+                        obj = Activator.CreateInstance<T>();
+                        foreach (PropertyInfo prop in obj.GetType().GetProperties())
+                        {
+                            if (!object.Equals(result[prop.Name], DBNull.Value))
+                            {
+                                prop.SetValue(obj, result[prop.Name], null);
+                            }
+                        }
+                        list.Add(obj);
+                    }
+                }
+                _DB.Database.CloseConnection();
+                return list;
+            }
         }
     }
     public class BaseRepository<T> : BaseRepository where T : class
@@ -40,6 +95,7 @@ namespace MyTwse.Repositories
         {
             return _DB.Set<T>().Where(whereLambda).ToList();
         }
+
         /// <summary>
         /// 根据条件查询
         /// </summary>
