@@ -36,3 +36,39 @@ GET /StockInfo
   }
 ]
 ```
+## 指定特定日期，顯示當天本益比前n名
+```http
+/StockInfo/PE/Rank
+```
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `date` | `datetime` | **Required**. 日期 ex. 2021/04/09 (日期不能為假日) |
+| `count` | `number` | **Required**. 筆數 ex. 100|
+
+### Responses
+```json
+[
+    {
+        "id": 127616,
+        "name": "秋雨",
+        "code": "9929",
+        "yieldRate": 3.10,
+        "dividendYear": 109,
+        "pe": 1.53,
+        "pb": 1.23,
+        "financialReport": "109/4",
+        "date": "2021-04-09T00:00:00"
+    },
+    {
+        "id": 128125,
+        "name": "陽明",
+        "code": "2609",
+        "yieldRate": 0.00,
+        "dividendYear": 108,
+        "pe": 11.31,
+        "pb": 3.80,
+        "financialReport": "109/4",
+        "date": "2021-04-09T00:00:00"
+    }
+]
+```
