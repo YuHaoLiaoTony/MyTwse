@@ -1,16 +1,9 @@
 ﻿using System;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MyTwse;
-using MyTwse.Models.QueryModels;
-using MyTwse.ServiceInterface;
-
 namespace MyTwseTest
 {
+
     [TestClass]
-    public class GetStockPERankTest
+    public class GetYieldRateIncreaseＭaxDays
     {
         static IWebHost _webHost = null;
         static T GetService<T>()
@@ -26,16 +19,19 @@ namespace MyTwseTest
                 .UseStartup<Startup>()
                 .Build();
         }
-
         [TestMethod]
-        public void 輸入的日期是假日()
+        public void 開始日期大於結束日期()
         {
             var ctx = GetService<IStockInfoService>();
-            DateTime date = new DateTime(2021, 04, 10);
             Assert.ThrowsException<MyTwseException>(() =>
             {
-                ctx.GetStockPERank(date, count: 10);
-            }, $"輸入的日期不能為假日：{date.ToString("yyyy-MM-dd")}");
+                ctx.GetYieldRateIncreaseＭaxDays(new YieldRateIncreaseＭaxDaysQueryModel
+                {
+                    Code = "1439",
+                    StartDate = new DateTime(2021, 04, 10),
+                    EndDate = new DateTime(2021, 04, 09)
+                });
+            }, $"錯誤請求：開始時間不得大於結束時間");
         }
     }
 }
