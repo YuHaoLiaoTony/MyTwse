@@ -1,7 +1,13 @@
 # TwseAPI 
 - 這是一個從證交所取得股票資訊的API
 - 資料來源 [個股日本益比、殖利率及股價淨值比](https://www.twse.com.tw/zh/page/trading/exchange/BWIBBU_d.html)
-
+## 通用格式－ＡＰＩ錯誤回傳格式範例
+```json
+{
+    "Code": 400001,
+    "Message": "輸入的日期不能為假日：Exception：BadRequestIsHolidayException：BadRequestIsHoliday"
+}
+```
 ## 取得前 100筆股票資料
 - 若資料庫沒有任何資料會呼叫證交所的API取得近５日資料
 - 主要用來測試使用
