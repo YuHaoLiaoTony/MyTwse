@@ -81,6 +81,10 @@ namespace MyTwse.Services
         /// <returns></returns>
         public List<YieldRateIncreaseＭaxDaysReportModel> GetYieldRateIncreaseＭaxDays(YieldRateIncreaseＭaxDaysQueryModel queryModel)
         {
+            if (queryModel.StartDate > queryModel.EndDate)
+            {
+                throw new MyTwseException(MyTwseExceptionEnum.BadRequest, "開始時間不得大於結束時間");
+            }
             CreateStockInfoData(queryModel.StartDate, queryModel.EndDate);
             return _StockInfoRepository.GetYieldRateIncreaseＭaxDays(queryModel);
         }

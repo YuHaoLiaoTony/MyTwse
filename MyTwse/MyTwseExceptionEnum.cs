@@ -12,6 +12,7 @@ namespace MyTwse
         [Description("系統錯誤")]
         InternalServerError = 500,
         [HttpStatusCode(HttpStatusCode.BadRequest)]
+        [Description("錯誤請求")]
         BadRequest = 400000,
         [HttpStatusCode(HttpStatusCode.BadRequest)]
         [Description("輸入的日期不能為假日")]
