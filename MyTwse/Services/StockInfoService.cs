@@ -40,8 +40,9 @@ namespace MyTwse.Services
 
             if(result.Any() == false)
             {
-                throw new MyTwseException(MyTwseExceptionEnum.NotFount,$"日期：{date.ToString("yyyy-MM-dd")}");
+                throw new MyTwseException(MyTwseExceptionEnum.NotFount, $"{date.ToString("yyyy-MM-dd")}");
             }
+
             return result;
         }
         public List<StockInfo> GetStockInfos()

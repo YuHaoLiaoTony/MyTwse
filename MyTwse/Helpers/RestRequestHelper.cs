@@ -66,6 +66,11 @@ namespace MyTwse.Helpers
             SetHttpRequest(Method.PUT, action);
             return this;
         }
+        public RestRequestHelper Post(Action<RestRequestParameterHelper> action = null)
+        {
+            SetHttpRequest(Method.POST, action);
+            return this;
+        }
         private void SetHttpRequest(Method method, Action<RestRequestParameterHelper> action = null)
         {
             this.http = new RestRequest(method);
