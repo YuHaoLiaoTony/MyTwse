@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MyTwse.Filters;
 using MyTwse.IRepositories;
+using MyTwse.Models;
 using MyTwse.Repositories;
 using MyTwse.ServiceInterface;
 using MyTwse.Services;
@@ -34,6 +35,8 @@ namespace MyTwse
 
             //Service
             services.AddScoped<IStockInfoService, StockInfoService>();
+            //服務注入DbContext
+            services.AddDbContext<TwseStockContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DBConStr")));
 
             //Repository
             services.AddScoped<IInsertDateLogRepository, InsertDateLogRepository>();

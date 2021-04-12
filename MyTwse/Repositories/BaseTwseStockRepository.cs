@@ -9,8 +9,8 @@ namespace MyTwse.Repositories
 {
     public class BaseTwseStockRepository<T> : BaseRepository<T> where T : class
     {
-        protected TwseStockContext _DB = null;
-        public BaseTwseStockRepository() : base(new TwseStockContext())
+        protected new TwseStockContext _DB = null;
+        public BaseTwseStockRepository(TwseStockContext context) : base(context)
         {
             _DB = (TwseStockContext)base._DB;
         }
