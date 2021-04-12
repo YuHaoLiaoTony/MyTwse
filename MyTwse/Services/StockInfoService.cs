@@ -124,8 +124,8 @@ namespace MyTwse.Services
                         )
                     .Response<StockInfoJsonModel>();
 
-                    //API 一直打會被鎖,故隨機延遲300~500毫秒
-                    Task.Delay(GetRandom(300, 500)).Wait();
+                    //API 一直打會被鎖,故隨機延遲500~700毫秒
+                    Task.Delay(GetRandom(500, 700)).Wait();
                 }
                 catch(Exception ex)
                 {
