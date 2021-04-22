@@ -248,3 +248,11 @@
 }
 ```
 
+
+
+# 程式碼反饋
+
+
+- 拿`免费节假日API` 來判斷台灣的國定假日應該是不準的。有需要判斷建議抓 [政府行政機關辦公日曆表](https://data.ntpc.gov.tw/openapi/swagger-ui/index.html?configUrl=%2Fopenapi%2Fswagger%2Fconfig&urls.primaryName=%E6%96%B0%E5%8C%97%E5%B8%82%E6%94%BF%E5%BA%9C%E4%BA%BA%E4%BA%8B%E8%99%95(20)#/JSON/get_308DCD75_6434_45BC_A95F_584DA4FED251_json)來處理  
+- `StyleCop.Cache`、`.user` 之類的檔案不應該 Commit 上版控。 建議修改更完整的 [.gitignore](https://github.com/github/gitignore/blob/master/VisualStudio.gitignore) 來使用  
+- 單元測試未包含查詢指令是否正確的測試，比較期待看到使用 `UseInMemoryDatabase` 設計好 TestCase 來驗證複雜 SQL 的正確性
