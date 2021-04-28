@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using DotNetCore.Utility.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using MyTwse.Extensions;
 
 namespace MyTwse
 {

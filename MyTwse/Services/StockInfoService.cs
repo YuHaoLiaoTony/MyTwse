@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DotNetCore.Utility.Extensions;
+using DotNetCore.Utility.Helpers;
 using MyTwse.Enum;
 using MyTwse.Extensions;
-using MyTwse.Helpers;
 using MyTwse.IRepositories;
 using MyTwse.Models;
 using MyTwse.Models.QueryModels;
