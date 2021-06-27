@@ -26,26 +26,29 @@ namespace MyTwse.Services
 
         public List<StockInfo> GetStockPERank(DateTime date, int count)
         {
-            Task<bool> isHoliday = date.IsHoliday();
-
-            isHoliday.Wait();
-
-            if (isHoliday.Result)
-            {
-                throw new MyTwseException(MyTwseExceptionEnum.BadRequestIsHoliday, $"{date.ToString("yyyy-MM-dd")}");
-            }
-
+            //確保是工作日
+            EnsureIsWorkingDay(date);
+            
             CreateStockInfoData(date);
 
             var result = _StockInfoRepository.GetPagedListOrderBy(1, count, e => e.Date == date.Date && e.PE.HasValue, e => e.PE);
 
-            if(result.Any() == false)
+            if (result.Any() == false)
             {
                 throw new MyTwseException(MyTwseExceptionEnum.NotFount, $"{date.ToString("yyyy-MM-dd")}");
             }
 
             return result;
         }
+
+        private static void EnsureIsWorkingDay(DateTime date)
+        {
+            if (date.IsHoliday())
+            {
+                throw new MyTwseException(MyTwseExceptionEnum.BadRequestIsHoliday, $"{date.ToString("yyyy-MM-dd")}");
+            }
+        }
+
         public List<StockInfo> GetStockInfos()
         {
             DateTime now = DateTime.UtcNow.AddHours(8);

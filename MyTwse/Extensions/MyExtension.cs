@@ -11,12 +11,20 @@ namespace MyTwse.Extensions
 {
     public static class MyExtension
     {
+        public static bool IsHoliday(this DateTime date)
+        {
+            Task<bool> isHoliday = date.IsHolidayAsync();
+
+            isHoliday.Wait();
+
+            return isHoliday.Result;
+        }
         /// <summary>
         /// 判断是不是周末/节假日
         /// </summary>
         /// <param name="date">日期</param>
         /// <returns>周末和节假日返回true，工作日返回false</returns>
-        public static async Task<bool> IsHoliday(this DateTime date)
+        public static async Task<bool> IsHolidayAsync(this DateTime date)
         {
             var isHoliday = false;
 
