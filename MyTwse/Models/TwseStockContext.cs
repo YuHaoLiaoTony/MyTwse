@@ -27,8 +27,6 @@ namespace MyTwse.Models
             modelBuilder.Entity<InsertDateLog>(entity =>
             {
                 entity.HasKey(e => new { e.Type, e.Date });
-
-                entity.Property(e => e.Date).HasColumnType("date");
             });
 
             modelBuilder.Entity<StockInfo>(entity =>
@@ -37,8 +35,6 @@ namespace MyTwse.Models
                     .IsRequired()
                     .HasMaxLength(50);
 
-                entity.Property(e => e.Date).HasColumnType("date");
-
                 entity.Property(e => e.FinancialReport)
                     .IsRequired()
                     .HasMaxLength(50);
@@ -46,12 +42,6 @@ namespace MyTwse.Models
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(50);
-
-                entity.Property(e => e.PB).HasColumnType("decimal(18, 2)");
-
-                entity.Property(e => e.PE).HasColumnType("decimal(18, 2)");
-
-                entity.Property(e => e.YieldRate).HasColumnType("decimal(18, 2)");
             });
 
             OnModelCreatingPartial(modelBuilder);

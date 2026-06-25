@@ -15,3 +15,4 @@
 | — | Upgrade .NET 5.0 → .NET 8.0 | Done in single jump, EF Core 3.1.3 → 8.0.11 |
 | — | Fix async deadlock in MyExtension.cs | Replaced `.Wait()/.Result` with `.GetAwaiter().GetResult()` |
 | — | Fix Random seed reuse | Made `_random` a static field |
+| — | Add SQLite support | `SqliteHelper` + `SqliteStockInfoRepository` + conditional DI. Default provider is SQLite. |

@@ -35,12 +35,25 @@ namespace MyTwse
 
             //Service
             services.AddScoped<IStockInfoService, StockInfoService>();
-            //服務注入DbContext
-            services.AddDbContext<TwseStockContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DBConStr")));
+
+            //資料庫提供者 (appsettings.json 中的 DatabaseProvider: "Sqlite" 或 "SqlServer")
+            var provider = Configuration.GetValue<string>("DatabaseProvider");
+
+            if (provider == "Sqlite")
+            {
+                services.AddDbContext<TwseStockContext>(options =>
+                    options.UseSqlite(Configuration.GetConnectionString("SQLite")));
+                services.AddScoped<IStockInfoRepository, SqliteStockInfoRepository>();
+            }
+            else
+            {
+                services.AddDbContext<TwseStockContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("DBConStr")));
+                services.AddScoped<IStockInfoRepository, StockInfoRepository>();
+            }
 
             //Repository
             services.AddScoped<IInsertDateLogRepository, InsertDateLogRepository>();
-            services.AddScoped<IStockInfoRepository, StockInfoRepository>();
 
            
 
@@ -63,6 +76,14 @@ namespace MyTwse
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+
+            //SQLite 自動建立資料庫與表格
+            if (Configuration.GetValue<string>("DatabaseProvider") == "Sqlite")
+            {
+                using var scope = app.ApplicationServices.CreateScope();
+                var db = scope.ServiceProvider.GetRequiredService<TwseStockContext>();
+                db.Database.EnsureCreated();
             }
 
             app.UseHttpsRedirection();
