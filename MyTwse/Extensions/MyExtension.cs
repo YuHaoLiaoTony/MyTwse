@@ -13,11 +13,7 @@ namespace MyTwse.Extensions
     {
         public static bool IsHoliday(this DateTime date)
         {
-            Task<bool> isHoliday = date.IsHolidayAsync();
-
-            isHoliday.Wait();
-
-            return isHoliday.Result;
+            return date.IsHolidayAsync().GetAwaiter().GetResult();
         }
         /// <summary>
         /// 判断是不是周末/节假日

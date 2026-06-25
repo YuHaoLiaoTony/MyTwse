@@ -1,5 +1,4 @@
 using System.Net.Mime;
-using DotNetCore.Utility.Filters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MyTwse.Infrastructure;
 using MyTwse.IRepositories;
 using MyTwse.Models;
 using MyTwse.Repositories;

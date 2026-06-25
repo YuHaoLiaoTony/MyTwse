@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
-using DotNetCore.Utility.Extensions;
-using DotNetCore.Utility.Helpers;
 using MyTwse.Enum;
 using MyTwse.Extensions;
+using MyTwse.Infrastructure;
 using MyTwse.IRepositories;
 using MyTwse.Models;
 using MyTwse.Models.QueryModels;
@@ -16,6 +17,7 @@ namespace MyTwse.Services
 {
     public class StockInfoService : IStockInfoService
     {
+        private static readonly Random _random = new Random();
         IInsertDateLogRepository _InsertDateLogRepository { get; set; }
         IStockInfoRepository _StockInfoRepository { get; set; }
         public StockInfoService(IInsertDateLogRepository insertDateLogRepository, IStockInfoRepository stockInfoRepository)
@@ -122,16 +124,14 @@ namespace MyTwse.Services
 
                 try
                 {
-                    result = RestRequestHelper.Request(url)
-                    .Get(e => e
-                        .AddParameter("date", date.ToString("yyyyMMdd"))
-                        )
-                    .Response<StockInfoJsonModel>();
+                    using var httpClient = new HttpClient();
+                    var response = httpClient.GetStringAsync($"{url}&date={date:yyyyMMdd}").GetAwaiter().GetResult();
+                    result = JsonSerializer.Deserialize<StockInfoJsonModel>(response);
 
                     //API 一直打會被鎖,故隨機延遲500~700毫秒
                     Task.Delay(GetRandom(500, 700)).Wait();
                 }
-                catch(Exception ex)
+                catch
                 {
                     //錯誤就跳出迴圈
                     break;
@@ -174,9 +174,7 @@ namespace MyTwse.Services
         }
         private int GetRandom(int min, int max)
         {
-            Random random = new Random();//亂數種子
-
-            return random.Next(min, max);//回傳0-99的亂數;
+            return _random.Next(min, max);
         }
         /// <summary>
         /// 確認需求範圍是否有未取得的資料

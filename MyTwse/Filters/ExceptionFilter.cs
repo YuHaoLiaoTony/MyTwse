@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using DotNetCore.Utility.Extensions;
+using MyTwse.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -45,7 +45,7 @@ namespace MyTwse
             }
             context.HttpContext.Response.Headers.Add("Content-Type", "application/json");
             context.HttpContext.Response.StatusCode = (int)statusCode;
-            context.HttpContext.Response.WriteAsync(result.ToJson());
+            context.HttpContext.Response.WriteAsync(System.Text.Json.JsonSerializer.Serialize(result));
             return Task.CompletedTask;
         }
     }
